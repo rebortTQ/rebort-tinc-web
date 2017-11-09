@@ -1,0 +1,22 @@
+related note:
+	一.configs 目录（web项目中需要使用的配置文件）
+	二.libs 目录（web项目里php需要使用到的依赖库）
+		A.smarty 相关组件
+			1.cache
+			2.configs
+			3.templates
+			4.templates_c
+			5.smarty-3.1.30 源码包
+	三.cert 目录（nginx服务器的ssl证书）
+		A.app_server.pem nginx服务器ssl的公钥（自签名证书）
+		B.app_server.key nginx服务器ssl的私钥
+	四.rayvan 目录（web项目组件）
+		A.libs(web项目的相关类)
+		B.work
+			1.cache
+			2.config
+			3.templates_c
+		C.www
+			1.cgi-bin
+			2.resources
+			3.tpl

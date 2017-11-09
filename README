@@ -1,0 +1,11 @@
+A.generate installation package:
+	# sh ./do-pack
+
+B.the location of the newly generated installation package
+	./installation-temp/tinc_web_installation.tar.gz
+
+C.install
+	1.copy tinc_web_installation.tar.gz to your machine(/opt)
+	2. # tar -zxvf tinc_web_installation.tar.gz
+	3. # cd installation  and read README
+	

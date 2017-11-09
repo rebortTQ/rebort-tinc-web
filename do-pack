@@ -1,0 +1,20 @@
+#!/bin/bash
+
+MYPWD=${PWD}
+curr_home=$(dirname ${PWD})
+
+PACKAGE_NAME="tinc_web_installation"
+TMP_DIR="installation-temp"
+
+# 1 create cacha dir
+rm -fr ${MYPWD}/${TMP_DIR}/
+mkdir -p ${MYPWD}/${TMP_DIR}/${PACKAGE_NAME}
+
+# 2 cp all project to cacha dir
+cp -r ${MYPWD}/dependence ${MYPWD}/${TMP_DIR}/${PACKAGE_NAME}
+cp -r ${MYPWD}/installation ${MYPWD}/${TMP_DIR}/${PACKAGE_NAME}
+cp -r ${MYPWD}/web ${MYPWD}/${TMP_DIR}/${PACKAGE_NAME}
+
+# 4 tar cacha dir
+cd ${MYPWD}/${TMP_DIR}
+tar -zcvf ${PACKAGE_NAME}.tar.gz ${PACKAGE_NAME}
