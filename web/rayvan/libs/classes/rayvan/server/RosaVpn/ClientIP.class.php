@@ -21,13 +21,23 @@ Class ClientIP
         function __destruct(){
         }
 
+	private function getSubnetFromGateway($gateway){
+		$subnet = "";
+		$ipArray = explode('.', $gateway, 4);
+		$num = count($ipArray);
+		if($num == 4){
+			$subnet = $ipArray[0].'.'.$ipArray[1].'.'.$ipArray[2].".0/8";
+		}
+
+		return $subnet;
+	}
 	private function getServerIP(){
 		$sip = $this->rayvan_web_conf['vpnServer']['host'];
 
 		return $sip;
 	}
-	private function createClientFile($fileName, $clientIp){
-		$content = "Address =".$clientIp.'\n'."Subnet = 10.0.0.0/8".'\n';
+	private function createClientFile($fileName, $clientIp, $subnet){
+		$content = "Address =".$clientIp."\n"."Subnet = ".$subnet."\n";
 		$client_public="-----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAxyvKAoNJHXcWZyk9q1P2s0zzeZTLaMDbKyjp0tOEJlt6+2TP1Hj5
 Y9+f83qnTRWz1dydVT71R8VXXCJ8AacX1MNmy6ODU/89gjveFVSl03w7yzPsysh4
@@ -38,9 +48,9 @@ K86+YyiliR1U50mvN0H/O3VO4fqbAh0/TwIDAQAB
 -----END RSA PUBLIC KEY-----";
 		file_put_contents($fileName, $content.$client_public);
 	}
-	private function addClientFileToHosts($clientName, $clientIp){
+	private function addClientFileToHosts($clientName, $clientIp, $subnet){
 		$rc = -1;
-		$this->createClientFile($clientName, $clientIp);
+		$this->createClientFile($clientName, $clientIp, $subnet);
 		if(file_exists($clientName)){
 			$rc = 0;
 		}
@@ -157,12 +167,18 @@ K86+YyiliR1U50mvN0H/O3VO4fqbAh0/TwIDAQAB
 					$array_data = Array("code"=>RayvanError::CLIENT_TYPE_UNKNOWN);
 					return;
 				}
-				$rc = $this->addClientFileToHosts($clientName, $ip);
-				if($rc == 0){
-					$this->setClientIdData($clientIdData, $this->clientID, $ip);
-					$array_data = Array("code"=>RayvanError::SUCCESS, "clientIP"=>$ip, "serverIP"=>$sip);	
+
+				$subnet = $this->getSubnetFromGateway($this->rayvan_web_conf['vpnServer']['gateway']);
+				if(!empty($subnet)){
+					$rc = $this->addClientFileToHosts($clientName, $ip, $subnet);
+					if($rc == 0){
+						$this->setClientIdData($clientIdData, $this->clientID, $ip);
+						$array_data = Array("code"=>RayvanError::SUCCESS, "clientIP"=>$ip, "serverIP"=>$sip);	
+					}else{
+						$array_data = Array("code"=>RayvanError::CREATE_CLIENT_FILE_ERROR);	
+					}
 				}else{
-					$array_data = Array("code"=>RayvanError::CREATE_CLIENT_FILE_ERROR);	
+					$array_data = Array("code"=>RayvanError::GET_SUBNET_ERROR);	
 				}
 			}else{
 				$array_data = Array("code"=>RayvanError::GET_CLIENTIP_ERROR);	

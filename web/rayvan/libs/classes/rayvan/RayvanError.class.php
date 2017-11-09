@@ -21,6 +21,7 @@ Class RayvanError
 	const CLIENT_TYPE_UNKNOWN = 40603; /* 未知的cleint_type */
 	const FIND_ROSAID_COMMAND_EXEC_ERROR = 40604; /* 命令执行失败 */
 	const CREATE_CLIENT_FILE_ERROR = 40605; /* 创建hosts下的client文件失败 */
+	const GET_SUBNET_ERROR = 40606; /* 通过服务器网关地址获取网段失败 */
 
 	/* 5xx 表示服务端处理错误 */
 	const SERVICE_UNKNOWN_ERROR = 500; /* 服务器未知错误 */
